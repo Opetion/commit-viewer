@@ -1,0 +1,12 @@
+#!/bin/sh
+# From gist at https://gist.github.com/chadmaughan/5889802
+
+echo '[git hook] Apply Spotless'
+
+FILES_CHANGED=$(git diff --name-only --cached)
+echo $FILES_CHANGED
+./gradlew spotlessApply --daemon
+
+git add $FILES_CHANGED
+
+exit 0

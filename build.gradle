@@ -1,0 +1,41 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id "com.diffplug.gradle.spotless" version "3.26.0"
+    id 'java'
+}
+
+group 'com.opetion'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+ext{
+    logback = "1.2.3"
+    junit = "5.5.2"
+    mockito = "3.1.0"
+}
+
+spotless {
+    enforceCheck = false
+    java {
+        eclipse()
+        removeUnusedImports()
+    }
+}
+
+dependencies {
+
+    // Logs
+    implementation "ch.qos.logback:logback-classic:${logback}"
+
+    // Tests
+    testImplementation "org.mockito:mockito-core:${mockito}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit}"
+
+}
