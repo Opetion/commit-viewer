@@ -29,6 +29,8 @@ spotless {
 }
 
 dependencies {
+    // Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // Logs
     implementation "ch.qos.logback:logback-classic:${logback}"

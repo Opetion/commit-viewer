@@ -1,8 +1,15 @@
 package com.opetion.seagit.parser.cli;
 
+import com.opetion.seagit.error.CliException;
+import com.opetion.seagit.git.GitRepository;
 import com.opetion.seagit.git.RefCommit;
+import com.opetion.seagit.git.RepositoryStatus;
+import com.opetion.seagit.git.page.PageRequest;
+import com.opetion.seagit.parser.general.GitParser;
+import com.opetion.seagit.parser.general.ParserResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,39 +17,49 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class CliParser {
+public class CliParser implements GitParser {
 	private static final Logger logger = LoggerFactory.getLogger(CliParser.class);
-	private static final String BASE_FOLDER = "workspace/";
+	private static final String WORKSPACE_FOLDER = "workspace/";
 	private static final String PRETTY_FORMAT = "--pretty=c-commit:%H\nc-author:%an\nc-email:%aE\nc-date:%aI\nc-subject:%s\nc-body:%b\n";
+	private static final String PAGE_SIZE = "--max-count=";
+	private static final String PAGE_NUMBER = "--skip=";
 
-	public void process(String url) {
-		logger.info("Start Cli Process for: {}", url);
-
-		String uuid = UUID.randomUUID().toString();
-		String folder = BASE_FOLDER + uuid;
-
-		clone(url, folder);
-		log(folder);
-		cleanup(folder);
+	public CliParser() {
 	}
 
-	public void validate() {
+	@Override
+	public boolean process(GitRepository repository) {
+		logger.info("Start Cli Process for: {}", repository.getUrl());
+
+		String uuid = UUID.randomUUID().toString();
+		String folder = WORKSPACE_FOLDER + uuid;
+		repository.setFolder(folder);
+
+		boolean isCloned = clone(repository);
+		repository.setStatus(RepositoryStatus.BROKEN);
+		if (isCloned) {
+			repository.setStatus(RepositoryStatus.READY);
+		}
+		return isCloned;
+	}
+
+	@Override
+	public boolean preValidate() {
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.command("git", "--version");
 		try {
-			execute(builder).forEach(logger::info);
-		} catch (IOException e) {
+			execute(builder).forEach(logger::debug);
+		} catch (IOException | CliException e) {
 			logger.error("Error executing git command. Please check if git is installed and on the Path environment");
-			throw new SeagitException();
+			return false;
 		}
+		return true;
 
 	}
 
@@ -57,34 +74,52 @@ public class CliParser {
 	 *             if something is wrong with the process itself. E.g. command
 	 *             doesn't exist.
 	 */
-	Stream<String> execute(ProcessBuilder builder) throws IOException {
+	Stream<String> execute(ProcessBuilder builder) throws IOException, CliException {
 		Process process = builder.start();
+		try {
+			process.waitFor();
+		} catch (InterruptedException e) {
+			logger.error("Unexpected process start", e);
+		}
+		if (process.exitValue() != 0) {
+			throw new CliException(process.exitValue());
+		}
 		return new BufferedReader(new InputStreamReader(process.getInputStream())).lines();
 	}
 
-	void clone(String url, String folder) {
+	private boolean clone(GitRepository repository) {
+		String url = repository.getUrl();
+		String folder = repository.getFolder();
 		logger.info("Start Clone for: {}", url);
+
 		ProcessBuilder builder = new ProcessBuilder();
 
 		// TODO: should I use git clone --depth? for a faster first response and make a
 		// background process to unshallow?
 
-		// TODO: Risk! Git Server down.
 		builder.command("git", "clone", url, folder);
 
-		// TODO: make this a background process?
 		try {
-			execute(builder).forEach(System.out::println);
-		} catch (IOException e) {
-			logger.error("Process Error", e);
+			execute(builder).forEach(logger::info);
+		} catch (IOException | CliException e) {
+			logger.error("Processing Error in {}", repository.getUrl(), e);
+			return false;
 		}
+
+		return Files.exists(Path.of(folder));
 	}
 
-	List<RefCommit> log(String folder) {
+	@Override
+	public ParserResult getCommits(GitRepository repository, PageRequest request) {
+		String folder = repository.getFolder();
 		logger.info("Start Log for: {}", folder);
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(new File(folder));
-		builder.command("git", "log", PRETTY_FORMAT);
+		int page = request.getPage();
+		int size = request.getSize();
+		String skip = PAGE_NUMBER + page * size;
+		String limit = PAGE_SIZE + size;
+		builder.command("git", "log", PRETTY_FORMAT, skip, limit);
 
 		List<RefCommit> commits = new ArrayList<>();
 		try {
@@ -93,7 +128,6 @@ public class CliParser {
 			String line;
 
 			RefCommit commit = new RefCommit();
-			commits.add(commit);
 			int x = 0;
 			while ((line = reader.readLine()) != null) {
 				if (line.startsWith("c-")) {
@@ -120,8 +154,8 @@ public class CliParser {
 						break;
 					case 6 :
 						// TODO: body
-						commit = new RefCommit();
 						commits.add(commit);
+						commit = new RefCommit();
 						x = 0;
 						break;
 
@@ -129,22 +163,8 @@ public class CliParser {
 			}
 		} catch (IOException e) {
 			logger.error("Process Error", e);
+			return ParserResult.error();
 		}
-		return commits;
-	}
-
-	/**
-	 * Recursive delete the folders to cleanup Solution of:
-	 * https://www.baeldung.com/java-delete-directory
-	 *
-	 * @param folder
-	 */
-	void cleanup(String folder) {
-		try {
-			Files.walk(Paths.get(folder)).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		return ParserResult.successful(commits);
 	}
 }
