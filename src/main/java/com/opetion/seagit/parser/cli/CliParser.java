@@ -9,7 +9,6 @@ import com.opetion.seagit.parser.general.GitParser;
 import com.opetion.seagit.parser.general.ParserResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;

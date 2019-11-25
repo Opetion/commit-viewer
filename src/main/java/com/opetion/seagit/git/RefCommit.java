@@ -63,6 +63,6 @@ public class RefCommit {
 
 	@Override
 	public String toString() {
-		return "RefCommit{" + "author='" + author + '\'' + ", date=" + date + '}';
+		return "RefCommit{" + "commitHash='" + commitHash + '\'' + '}';
 	}
 }

@@ -1,21 +1,17 @@
 package com.opetion.seagit;
 
-import com.opetion.seagit.parser.ParserRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
-public class AppStart {
+@SpringBootApplication
+@EnableAsync
+class AppStart {
 	private static final Logger logger = LoggerFactory.getLogger(AppStart.class);
-	private static final String TEST_URL = "https://gitlab.com/RobertZenz/jLuaScript.git";
 
 	public static void main(String[] args) {
-		// TODO: spotless plugin
-		if (args.length != 1) {
-			logger.error("Requires 1 argument of a git url");
-			System.exit(-1);
-		}
-		ParserRouter router = new ParserRouter();
-		router.validate();
-		router.route(args[0]);
+		SpringApplication.run(AppStart.class, args);
 	}
 }
