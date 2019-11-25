@@ -18,6 +18,7 @@ ext{
     logback = "1.2.3"
     junit = "5.5.2"
     mockito = "3.1.0"
+    retrofit = "2.6.2"
 }
 
 spotless {
@@ -31,6 +32,11 @@ spotless {
 dependencies {
     // Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Rest Client
+    implementation "com.squareup.retrofit2:retrofit:${retrofit}"
+    implementation "com.squareup.retrofit2:converter-jackson:${retrofit}"
+
 
     // Logs
     implementation "ch.qos.logback:logback-classic:${logback}"

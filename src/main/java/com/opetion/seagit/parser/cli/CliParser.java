@@ -9,6 +9,7 @@ import com.opetion.seagit.parser.general.GitParser;
 import com.opetion.seagit.parser.general.ParserResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+@Service
 public class CliParser implements GitParser {
 	private static final Logger logger = LoggerFactory.getLogger(CliParser.class);
 	private static final String WORKSPACE_FOLDER = "workspace/";
@@ -165,5 +167,10 @@ public class CliParser implements GitParser {
 			return ParserResult.error();
 		}
 		return ParserResult.successful(commits);
+	}
+
+	@Override
+	public int getPriority() {
+		return Integer.MAX_VALUE;
 	}
 }

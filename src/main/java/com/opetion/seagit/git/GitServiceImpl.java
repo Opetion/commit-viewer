@@ -1,6 +1,5 @@
 package com.opetion.seagit.git;
 
-import com.opetion.seagit.error.SeagitException;
 import com.opetion.seagit.git.page.Page;
 import com.opetion.seagit.git.page.PageMetadata;
 import com.opetion.seagit.git.page.PageRequest;
@@ -61,9 +60,7 @@ public class GitServiceImpl implements GitService {
 		}
 
 		GitRepository repository = repositories.get(id);
-		if (RepositoryStatus.READY != repository.getStatus()) {
-			throw new SeagitException();
-		}
+
 		return parser.getCommits(repository, request);
 	}
 }

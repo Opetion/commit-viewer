@@ -5,7 +5,6 @@ import com.opetion.seagit.git.RefCommit;
 import com.opetion.seagit.git.page.Page;
 import com.opetion.seagit.git.page.PageMetadata;
 import com.opetion.seagit.git.page.PageRequest;
-import com.opetion.seagit.parser.cli.CliParser;
 import com.opetion.seagit.parser.general.GitParser;
 import com.opetion.seagit.parser.general.ParserResult;
 import com.opetion.seagit.parser.general.ParserStatus;
@@ -15,12 +14,19 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class ParserService {
 	private static final Logger logger = LoggerFactory.getLogger(ParserService.class);
-	private final List<GitParser> parsers = List.of(new CliParser());
+
+	private final List<GitParser> parsers;
+
+	public ParserService(List<GitParser> parsers) {
+		this.parsers = parsers;
+		parsers.sort(Comparator.comparing(GitParser::getPriority));
+	}
 
 	@Async
 	public void clone(GitRepository repository) {

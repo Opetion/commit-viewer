@@ -33,4 +33,14 @@ public interface GitParser {
 	 * @return Result of the command with the commits if successful
 	 */
 	ParserResult getCommits(GitRepository repository, PageRequest request);
+
+	/**
+	 * This defines the priority of the parsers, the higher the number the later its
+	 * called
+	 *
+	 * @return int
+	 */
+	default int getPriority() {
+		return 0;
+	}
 }
