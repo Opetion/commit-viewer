@@ -23,7 +23,7 @@ class CliParserTest {
 	@Test
 	void checkValidatorTransformsException() throws IOException, CliException {
 		doThrow(new IOException()).when(parser).execute(any());
-		assertThrows(RuntimeException.class, () -> parser.preValidate());
+		assertFalse(parser::preValidate);
 	}
 
 }
