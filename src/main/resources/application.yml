@@ -1,2 +1,7 @@
+# Port being used for the embedded tomcat
+server:
+  port: 8080
+
+# Base url for github
 github:
   url: https://api.github.com

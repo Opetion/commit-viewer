@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "cf385c7b-c205-4758-89c2-27f07a6d6691",
+		"name": "Seagit",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create - Repository",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"url\":\"https://github.com/square/okhttp\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/repositories",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"repositories"
+					]
+				},
+				"description": "Clones a repository"
+			},
+			"response": []
+		},
+		{
+			"name": "Index - Repository",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"url\":\"find\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/repositories?page=0&size=5",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"repositories"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0",
+							"description": "number of elements in a page"
+						},
+						{
+							"key": "size",
+							"value": "5",
+							"description": "number of the page"
+						}
+					]
+				},
+				"description": "Provides a list of repositories"
+			},
+			"response": []
+		},
+		{
+			"name": "Index - Commits",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"url\":\"find\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/repositories/0/commits?size=5&page=0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"repositories",
+						"0",
+						"commits"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "5",
+							"description": "number of elements in a page"
+						},
+						{
+							"key": "page",
+							"value": "0",
+							"description": "number of the page"
+						}
+					]
+				},
+				"description": "Visualize the commits of a repository"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
