@@ -1,5 +1,7 @@
 package com.opetion.seagit.git.page;
 
+import java.util.List;
+
 public class PageMetadata {
 	private final boolean hasNext;
 	private final int pageNumber;
@@ -12,6 +14,15 @@ public class PageMetadata {
 	}
 
 	public static PageMetadata of(int pageNumber, int pageSize, boolean hasNext) {
+		return new PageMetadata(pageNumber, pageSize, hasNext);
+	}
+
+	public static <T> PageMetadata of(List<T> page, int pageNumber, int pageSize) {
+		boolean hasNext = page.size() > pageSize;
+		return new PageMetadata(pageNumber, pageSize, hasNext);
+	}
+
+	public static <T> PageMetadata of(List<T> page, int pageNumber, int pageSize, boolean hasNext) {
 		return new PageMetadata(pageNumber, pageSize, hasNext);
 	}
 

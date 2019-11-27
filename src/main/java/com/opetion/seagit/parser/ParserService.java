@@ -1,5 +1,6 @@
 package com.opetion.seagit.parser;
 
+import com.opetion.seagit.error.SeagitException;
 import com.opetion.seagit.git.GitRepository;
 import com.opetion.seagit.git.RefCommit;
 import com.opetion.seagit.git.page.Page;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -24,8 +26,8 @@ public class ParserService {
 	private final List<GitParser> parsers;
 
 	public ParserService(List<GitParser> parsers) {
-		this.parsers = parsers;
-		parsers.sort(Comparator.comparing(GitParser::getPriority));
+		this.parsers = new ArrayList<>(parsers);
+		this.parsers.sort(Comparator.comparing(GitParser::getPriority));
 	}
 
 	@Async
@@ -38,11 +40,11 @@ public class ParserService {
 			}
 		}
 
-		logger.error("Not possible to parse: {}", repository.getUrl());
+		throw new SeagitException("Not possible to parse: " + repository.getUrl());
 	}
 
 	public Page<RefCommit> getCommits(GitRepository repository, PageRequest request) {
-		List<RefCommit> commits = List.of();
+		Page<RefCommit> commits = Page.of(List.of(), PageMetadata.of(0, 0, false));
 		for (GitParser parser : parsers) {
 			ParserResult result = parser.getCommits(repository, request);
 
@@ -52,11 +54,7 @@ public class ParserService {
 			}
 		}
 
-		int pageSize = request.getSize();
-		int pageNumber = request.getPage();
-
-		List<RefCommit> actualContent = commits.subList(0, Math.min(pageSize, commits.size()));
-		return Page.of(actualContent, PageMetadata.of(pageNumber, pageSize, commits.size() > pageSize));
+		return commits;
 	}
 
 	@PostConstruct

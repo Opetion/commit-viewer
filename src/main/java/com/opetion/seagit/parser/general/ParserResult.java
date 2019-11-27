@@ -1,19 +1,21 @@
 package com.opetion.seagit.parser.general;
 
 import com.opetion.seagit.git.RefCommit;
+import com.opetion.seagit.git.page.Page;
+import com.opetion.seagit.git.page.PageMetadata;
 
 import java.util.List;
 
 public class ParserResult {
 	private final ParserStatus status;
-	private final List<RefCommit> commitList;
+	private final Page<RefCommit> commitList;
 
 	private ParserResult(ParserStatus status) {
 		this.status = status;
-		this.commitList = List.of();
+		this.commitList = Page.of(List.of(), PageMetadata.of(0, 0, false));
 	}
 
-	private ParserResult(ParserStatus status, List<RefCommit> commits) {
+	private ParserResult(ParserStatus status, Page<RefCommit> commits) {
 		this.status = status;
 		this.commitList = commits;
 	}
@@ -22,7 +24,7 @@ public class ParserResult {
 		return new ParserResult(ParserStatus.ERROR);
 	}
 
-	public static ParserResult successful(List<RefCommit> commits) {
+	public static ParserResult successful(Page<RefCommit> commits) {
 		return new ParserResult(ParserStatus.SUCCESSFUL, commits);
 	}
 
@@ -30,7 +32,7 @@ public class ParserResult {
 		return status;
 	}
 
-	public List<RefCommit> getCommitList() {
+	public Page<RefCommit> getCommitList() {
 		return commitList;
 	}
 

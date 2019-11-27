@@ -5,6 +5,7 @@ import com.opetion.seagit.git.GitRepository;
 import com.opetion.seagit.git.RefCommit;
 import com.opetion.seagit.git.RepositoryStatus;
 import com.opetion.seagit.git.page.PageRequest;
+import com.opetion.seagit.git.page.PageUtils;
 import com.opetion.seagit.parser.general.GitParser;
 import com.opetion.seagit.parser.general.ParserResult;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
 public class CliParser implements GitParser {
 	private static final Logger logger = LoggerFactory.getLogger(CliParser.class);
 	private static final String WORKSPACE_FOLDER = "workspace/";
-	private static final String PRETTY_FORMAT = "--pretty=c-commit:%H\nc-author:%an\nc-email:%aE\nc-date:%aI\nc-subject:%s\nc-body:%b\n";
+	private static final String PRETTY_FORMAT = "--pretty=c-commit:%H\nc-author:%an\nc-email:%aE\nc-date:%aI\nc-subject:%s\n";
 	private static final String PAGE_SIZE = "--max-count=";
 	private static final String PAGE_NUMBER = "--skip=";
 
@@ -166,7 +167,11 @@ public class CliParser implements GitParser {
 			logger.error("Process Error", e);
 			return ParserResult.error();
 		}
-		return ParserResult.successful(commits);
+
+		int pageSize = request.getSize();
+		int pageNumber = request.getPage();
+
+		return ParserResult.successful(PageUtils.build(commits, pageNumber, pageSize));
 	}
 
 	@Override
