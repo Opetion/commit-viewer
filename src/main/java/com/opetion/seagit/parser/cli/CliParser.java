@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -123,46 +124,17 @@ public class CliParser implements GitParser {
 		String limit = PAGE_SIZE + size;
 		builder.command("git", "log", PRETTY_FORMAT, skip, limit);
 
-		List<RefCommit> commits = new ArrayList<>();
+		List<RefCommit> commits;
+
 		try {
 			Process process = builder.start();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line;
+			InputStreamReader in = new InputStreamReader(process.getInputStream());
 
-			RefCommit commit = new RefCommit();
-			int x = 0;
-			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("c-")) {
-					x++;
-				}
-				// TODO: Proof of concept. Find a better way to parse
-				switch (x) {
-					case 0 :
-						break;
-					case 1 :
-						commit.setCommitHash(line.substring("c-commit:".length()));
-						break;
-					case 2 :
-						commit.setAuthor(line.substring("c-author:".length()));
-						break;
-					case 3 :
-						commit.setEmail(line.substring("c-email:".length()));
-						break;
-					case 4 :
-						commit.setDate(OffsetDateTime.parse(line.substring("c-date:".length())).toLocalDateTime());
-						break;
-					case 5 :
-						commit.setSubject(line.substring("c-subject:".length()));
-						break;
-					case 6 :
-						// TODO: body
-						commits.add(commit);
-						commit = new RefCommit();
-						x = 0;
-						break;
-
-				}
+			try (var bufferedReader = new BufferedReader(in)) {
+				Stream<String> lines = bufferedReader.lines();
+				commits = parse(lines);
 			}
+
 		} catch (IOException e) {
 			logger.error("Process Error", e);
 			return ParserResult.error();
@@ -172,6 +144,52 @@ public class CliParser implements GitParser {
 		int pageNumber = request.getPage();
 
 		return ParserResult.successful(PageUtils.build(commits, pageNumber, pageSize));
+	}
+
+	List<RefCommit> parse(Stream<String> text) {
+		List<RefCommit> commits = new ArrayList<>();
+		RefCommit commit = new RefCommit();
+		int x = 0;
+
+		Iterator<String> iterator = text.iterator();
+
+		while (iterator.hasNext()) {
+			String line = iterator.next();
+
+			x++;
+
+			// TODO: Proof of concept. Find a better way to parse
+			switch (x) {
+				case 0 :
+					break;
+				case 1 :
+					commit.setCommitHash(line.substring("c-commit:".length()));
+					break;
+				case 2 :
+					commit.setAuthor(line.substring("c-author:".length()));
+					break;
+				case 3 :
+					commit.setEmail(line.substring("c-email:".length()));
+					break;
+				case 4 :
+					commit.setDate(OffsetDateTime.parse(line.substring("c-date:".length())).toLocalDateTime());
+					break;
+				case 5 :
+					commit.setSubject(line.substring("c-subject:".length()));
+					break;
+				case 6 :
+					// TODO: body
+					commits.add(commit);
+					commit = new RefCommit();
+					x = 0;
+					break;
+
+			}
+		}
+		if (commit.getCommitHash() != null) {
+			commits.add(commit);
+		}
+		return commits;
 	}
 
 	@Override
