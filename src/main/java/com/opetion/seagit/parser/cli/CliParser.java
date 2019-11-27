@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 public class CliParser implements GitParser {
 	private static final Logger logger = LoggerFactory.getLogger(CliParser.class);
 	private static final String WORKSPACE_FOLDER = "workspace/";
-	private static final String PRETTY_FORMAT = "--pretty=c-commit:%H\nc-author:%an\nc-email:%aE\nc-date:%aI\nc-subject:%s\n";
+	private final String cliFormat = "--pretty=c-commit:%H\nc-author:%an\nc-email:%aE\nc-date:%aI\nc-subject:%s\n";
 	private static final String PAGE_SIZE = "--max-count=";
 	private static final String PAGE_NUMBER = "--skip=";
 
@@ -122,7 +122,7 @@ public class CliParser implements GitParser {
 		int size = request.getSize();
 		String skip = PAGE_NUMBER + page * size;
 		String limit = PAGE_SIZE + size;
-		builder.command("git", "log", PRETTY_FORMAT, skip, limit);
+		builder.command("git", "log", cliFormat, skip, limit);
 
 		List<RefCommit> commits;
 
@@ -149,47 +149,55 @@ public class CliParser implements GitParser {
 	List<RefCommit> parse(Stream<String> text) {
 		List<RefCommit> commits = new ArrayList<>();
 		RefCommit commit = new RefCommit();
-		int x = 0;
-
 		Iterator<String> iterator = text.iterator();
 
 		while (iterator.hasNext()) {
 			String line = iterator.next();
+			CliToken token = parseToken(line);
 
-			x++;
-
-			// TODO: Proof of concept. Find a better way to parse
-			switch (x) {
-				case 0 :
+			switch (token) {
+				case COMMIT :
+					commit.setCommitHash(line.substring(token.length() + 1));
 					break;
-				case 1 :
-					commit.setCommitHash(line.substring("c-commit:".length()));
+				case AUTHOR :
+					commit.setAuthor(line.substring(token.length() + 1));
 					break;
-				case 2 :
-					commit.setAuthor(line.substring("c-author:".length()));
+				case EMAIL :
+					commit.setEmail(line.substring(token.length() + 1));
 					break;
-				case 3 :
-					commit.setEmail(line.substring("c-email:".length()));
+				case DATE :
+					commit.setDate(OffsetDateTime.parse(line.substring(token.length() + 1)).toLocalDateTime());
 					break;
-				case 4 :
-					commit.setDate(OffsetDateTime.parse(line.substring("c-date:".length())).toLocalDateTime());
+				case SUBJECT :
+					commit.setSubject(line.substring(token.length() + 1));
 					break;
-				case 5 :
-					commit.setSubject(line.substring("c-subject:".length()));
-					break;
-				case 6 :
-					// TODO: body
+				case NONE :
 					commits.add(commit);
 					commit = new RefCommit();
-					x = 0;
 					break;
-
 			}
+
 		}
 		if (commit.getCommitHash() != null) {
 			commits.add(commit);
 		}
 		return commits;
+	}
+
+	/**
+	 * Parse a line to find a token
+	 *
+	 * @param line
+	 *            line to match
+	 * @return CliToken with None by default
+	 */
+	private CliToken parseToken(String line) {
+		CliToken token = CliToken.NONE;
+		int index = line.indexOf(":");
+		if (index != -1) {
+			token = CliToken.of(line.substring(0, index));
+		}
+		return token;
 	}
 
 	@Override
