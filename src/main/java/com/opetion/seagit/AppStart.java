@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-class AppStart {
+public class AppStart {
 	private static final Logger logger = LoggerFactory.getLogger(AppStart.class);
 
 	public static void main(String[] args) {
