@@ -1,6 +1,9 @@
 package com.opetion.seagit.error;
 
 public class SeagitException extends RuntimeException {
-	public SeagitException() {
+	private String message;
+
+	public SeagitException(String message) {
+		super(message);
 	}
 }

@@ -8,7 +8,6 @@ public class RefCommit {
 	private String email;
 	private LocalDateTime date;
 	private String subject;
-	private String body;
 
 	public RefCommit() {
 	}
@@ -51,14 +50,6 @@ public class RefCommit {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
-	}
-
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
 	}
 
 	@Override

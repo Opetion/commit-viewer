@@ -17,11 +17,11 @@ public interface GitParser {
 	/**
 	 * Process a request to parse git commands.
 	 *
-	 * @param url
+	 * @param repository
 	 *            git repository
 	 * @return list of requested commits
 	 */
-	boolean process(GitRepository url);
+	boolean process(GitRepository repository);
 
 	/**
 	 * Get a page of commits from the repository

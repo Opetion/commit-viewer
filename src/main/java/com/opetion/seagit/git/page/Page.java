@@ -19,16 +19,8 @@ public class Page<T> {
 		return content;
 	}
 
-	public void setContent(List<T> content) {
-		this.content = content;
-	}
-
 	public PageMetadata getMetadata() {
 		return metadata;
-	}
-
-	public void setMetadata(PageMetadata metadata) {
-		this.metadata = metadata;
 	}
 
 	@Override
