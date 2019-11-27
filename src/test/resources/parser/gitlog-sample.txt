@@ -1,0 +1,71 @@
+c-commit:a9e16d83b6a5f772e5df25c59d6d8ca92a17b40a
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-27T00:28:35+00:00
+c-subject::white_check_mark: add parser service tests
+
+c-commit:be37c8bedcd1fe225eb11d5ce3911cacad205f15
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-27T00:28:07+00:00
+c-subject::recycle: create helper methods for pagination
+
+c-commit:a8ed043eeda3d4a51c97d732d2c0824219f13376
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-27T00:26:58+00:00
+c-subject::bug: change github impl to provide subject of commit
+
+c-commit:fe7ef991ed46f2564ea8a6439645b98eea543577
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-27T00:25:25+00:00
+c-subject::recycle: cleanup no longer needed methods
+
+c-commit:f9763a28628bb12707b574460409504be1ab2c7b
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-25T23:01:56+00:00
+c-subject::white_check_mark: add github parser tests
+
+c-commit:458c301934ff3af3a8c2b3f9fc4ac796ddffd188
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-25T23:01:40+00:00
+c-subject::sparkles: add github integration
+
+c-commit:39844316dfbec0e5fa5cb75427b986fbbbfe8166
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-25T20:45:52+00:00
+c-subject::white_check_mark: update test to match the new preValidate behaviour
+
+c-commit:1391ab93e8677f67b41f61fdb832a9aaf0490cc6
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-25T20:39:17+00:00
+c-subject::pencil: update the description and provide a sample "dev guide"
+
+c-commit:71a974e2dc196749057943ebabee38289b832edc
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-25T20:37:26+00:00
+c-subject::sparkles: add rest endpoints
+
+c-commit:ee7c8f85c802fbf950723d39032d5f5d8eef6479
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-25T20:31:56+00:00
+c-subject::recycle: architecture refactor to better separate the parser
+
+c-commit:7a54adebde2d36212ad24c4752afc38807adecd0
+c-author:Opetion
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-23T12:06:11+00:00
+c-subject::sparkles: add early experimental parser
+
+c-commit:7e4caa2591e6ef3bdadc9e6aa981b0741aa2b08b
+c-author:Joao Costa
+c-email:jfc.costa91@gmail.com
+c-date:2019-11-22T00:06:59+00:00
+c-subject::tada: initial commit

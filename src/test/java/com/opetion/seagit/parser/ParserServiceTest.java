@@ -7,8 +7,8 @@ import com.opetion.seagit.git.page.Page;
 import com.opetion.seagit.git.page.PageMetadata;
 import com.opetion.seagit.git.page.PageRequest;
 import com.opetion.seagit.parser.general.GitParser;
-import com.opetion.seagit.parser.util.BadMockParser;
-import com.opetion.seagit.parser.util.MockParser;
+import com.opetion.seagit.parser.mock.BadMockParser;
+import com.opetion.seagit.parser.mock.MockParser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

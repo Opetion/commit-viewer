@@ -19,6 +19,7 @@ ext{
     junit = "5.5.2"
     mockito = "3.1.0"
     retrofit = "2.6.2"
+    wiremock = "2.25.1"
 }
 
 spotless {
@@ -27,6 +28,10 @@ spotless {
         eclipse()
         removeUnusedImports()
     }
+}
+
+test {
+    useJUnitPlatform()
 }
 
 dependencies {
@@ -42,8 +47,6 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:${logback}"
 
     // Tests
-    testImplementation "org.mockito:mockito-core:${mockito}"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit}"
-
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "com.github.tomakehurst:wiremock:${wiremock}"
 }

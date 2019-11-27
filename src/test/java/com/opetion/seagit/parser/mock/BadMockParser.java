@@ -1,4 +1,4 @@
-package com.opetion.seagit.parser.util;
+package com.opetion.seagit.parser.mock;
 
 import com.opetion.seagit.git.GitRepository;
 import com.opetion.seagit.git.page.PageRequest;
