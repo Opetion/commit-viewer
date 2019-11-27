@@ -38,7 +38,7 @@ public interface GitParser {
 	 * This defines the priority of the parsers, the higher the number the later its
 	 * called
 	 *
-	 * @return int
+	 * @return int priority
 	 */
 	default int getPriority() {
 		return 0;
