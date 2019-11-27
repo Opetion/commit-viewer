@@ -22,12 +22,12 @@ public class GitController {
 			@RequestParam(defaultValue = "0") int page) {
 		size = (size <= 0) ? 5 : size;
 		page = (page <= 0) ? 0 : page;
-		return service.find(new PageRequest(size, page));
+		return service.findRepositories(new PageRequest(size, page));
 	}
 
 	@PostMapping
 	GitRepository cloneRepository(@RequestBody GitRepository clone) {
-		return service.create(clone);
+		return service.createRepository(clone);
 	}
 
 	@GetMapping("/{id}/commits")
@@ -36,7 +36,7 @@ public class GitController {
 		size = (size <= 0) ? 5 : size;
 		page = (page <= 0) ? 0 : page;
 
-		return service.details(id, new PageRequest(size, page));
+		return service.getCommits(id, new PageRequest(size, page));
 	}
 
 }

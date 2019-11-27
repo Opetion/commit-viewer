@@ -23,7 +23,7 @@ public class GitServiceImpl implements GitService {
 	}
 
 	@Override
-	public Page<GitRepository> find(PageRequest pageRequest) {
+	public Page<GitRepository> findRepositories(PageRequest pageRequest) {
 		int size = pageRequest.getSize();
 		int page = pageRequest.getPage();
 		List<GitRepository> subset = repositories.stream().skip(size * page).limit(size).collect(Collectors.toList());
@@ -34,7 +34,7 @@ public class GitServiceImpl implements GitService {
 	}
 
 	@Override
-	public GitRepository create(GitRepository repository) {
+	public GitRepository createRepository(GitRepository repository) {
 		synchronized (this) {
 			if (repositories.contains(repository)) {
 				// TODO: improve duplicates
@@ -54,7 +54,7 @@ public class GitServiceImpl implements GitService {
 	}
 
 	@Override
-	public Page<RefCommit> details(int id, PageRequest request) {
+	public Page<RefCommit> getCommits(int id, PageRequest request) {
 		if (id >= repositories.size()) {
 			return Page.of(List.of(), PageMetadata.of(0, 0, false));
 		}
