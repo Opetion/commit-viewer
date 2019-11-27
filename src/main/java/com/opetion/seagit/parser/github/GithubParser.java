@@ -2,7 +2,9 @@ package com.opetion.seagit.parser.github;
 
 import com.opetion.seagit.git.GitRepository;
 import com.opetion.seagit.git.RefCommit;
+import com.opetion.seagit.git.RepositoryStatus;
 import com.opetion.seagit.git.page.PageRequest;
+import com.opetion.seagit.git.page.PageUtils;
 import com.opetion.seagit.parser.general.GitParser;
 import com.opetion.seagit.parser.general.ParserResult;
 import com.opetion.seagit.parser.github.schema.GithubCommit;
@@ -30,8 +32,11 @@ public class GithubParser implements GitParser {
 	}
 
 	@Override
-	public boolean process(GitRepository url) {
-		// For the github repo we don't need any kind of pre-processing
+	public boolean process(GitRepository repository) {
+		String[] project = parseUrl(repository.getUrl());
+		if (project != null) {
+			repository.setStatus(RepositoryStatus.READY);
+		}
 		return false;
 	}
 
@@ -49,7 +54,6 @@ public class GithubParser implements GitParser {
 		try {
 			Response<List<GithubCommit>> response = listCall.execute();
 			result = response.body();
-
 		} catch (IOException e) {
 			logger.error("Error on Github connection", e);
 			return ParserResult.error();
@@ -58,7 +62,12 @@ public class GithubParser implements GitParser {
 			return ParserResult.error();
 		}
 
-		return ParserResult.successful(result.stream().map(this::map).collect(Collectors.toList()));
+		int pageSize = request.getSize();
+		int pageNumber = request.getPage();
+
+		List<RefCommit> commits = result.stream().map(this::map).collect(Collectors.toList());
+
+		return ParserResult.successful(PageUtils.build(commits, pageNumber, pageSize));
 	}
 
 	/**
@@ -87,8 +96,7 @@ public class GithubParser implements GitParser {
 		result.setAuthor(commit.getDetails().getAuthorName());
 		result.setEmail(commit.getDetails().getAuthorEmail());
 		result.setDate(commit.getDetails().getAuthorDate());
-		// TODO: body/title
-		result.setBody(commit.getDetails().getMessage());
+		result.setSubject(commit.getDetails().getMessage());
 		result.setCommitHash(commit.getSha());
 		return result;
 	}
