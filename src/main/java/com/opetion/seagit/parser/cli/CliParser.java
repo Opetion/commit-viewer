@@ -33,9 +33,6 @@ public class CliParser implements GitParser {
 	private static final String PAGE_SIZE = "--max-count=";
 	private static final String PAGE_NUMBER = "--skip=";
 
-	public CliParser() {
-	}
-
 	@Override
 	public boolean process(GitRepository repository) {
 		logger.info("Start Cli Process for: {}", repository.getUrl());

@@ -5,7 +5,7 @@ public enum CliToken {
 
 	private String token;
 
-	CliToken(java.lang.String token) {
+	CliToken(String token) {
 		this.token = token;
 	}
 

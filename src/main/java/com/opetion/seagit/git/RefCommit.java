@@ -11,6 +11,7 @@ public class RefCommit {
 	private String subject;
 
 	public RefCommit() {
+		// Empty Jackson Constructor
 	}
 
 	public String getCommitHash() {
