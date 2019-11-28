@@ -49,3 +49,11 @@ size (int) - elements per page
 page (int) - number of page
 
 
+## Future Work
+
+* Reuse the workspace created to deal with server restart or use a database.
+* Filter by branch and/or show results from all branches: 
+  * CLI Client - It should be possible to show results from all branches with `--all` for the cli client.
+  * Github API - There is no easy way to do this. So it would require to fetch all branches and mix the different commits.
+* git clone --depth to have a faster first result and unshallow on the background.
+* Have a background process fetching the latest commits to avoid CLI being stuck on the past.
