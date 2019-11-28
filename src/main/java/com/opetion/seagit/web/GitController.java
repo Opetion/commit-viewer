@@ -33,6 +33,7 @@ public class GitController {
 	@GetMapping("/{id}/commits")
 	Page<RefCommit> getCommits(@PathVariable int id, @RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "0") int page) {
+		id = (id <= 0) ? 0 : id;
 		size = (size <= 0) ? 5 : size;
 		page = (page <= 0) ? 0 : page;
 
