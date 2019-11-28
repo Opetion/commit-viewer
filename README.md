@@ -1,11 +1,12 @@
 # Commit Viewer (Seagit)
-_This project was developed in the context of an exercise._
+_This project was developed in the context of an exercise._  
+
 ## Description
-The goal of this project is to provide a git commit history.
+The goal of this project is to provide a git commit history.  
 
 There are 2 implemented parsers for this:
-- Github API;
-- Git CLI;
+- Github API;  
+- Git CLI;  
   
 ## Dev Guide
 ### Commits 
@@ -27,15 +28,15 @@ To create a runnable jar we only need to execute `./gradlew bootJar` that will p
 
 ### Endpoints
 Currently we provide a [Postman file](scripts/Seagit.postman_collection.json) with the available endpoints-
-Currently the application provides the following endpoints:
-    
-*[GET] Index - Repositories*   
-url: /api/repositories   
-description: Provides a list of repositories   
+Currently the application provides the following endpoints:  
+  
+*\[GET] Index - Repositories*  
+url: /api/repositories  
+description: Provides a list of repositories     
    
-*[POST] Create - Repository*
-url: /api/repositories    
-description: Clones a repository   
+*\[POST] Create - Repository*  
+url: /api/repositories  
+description: Clones a repository  
 Expects the body with:  
 ```json
 {
@@ -43,19 +44,18 @@ Expects the body with:
 }
 ``` 
 
-*[GET] Index -  Repository Commits*  
+*\[GET] Index -  Repository Commits*  
 url: /api/{id}/commits  
-description: Visualize the commits of a repository   
-request parameters:    
-size (int) - elements per page 
-page (int) - number of page
-
+description: Visualize the commits of a repository  
+request parameters:  
+size (int) - elements per page  
+page (int) - number of page  
 
 ## Future Work
 
-* Reuse the workspace created to deal with server restart or use a database.
-* Filter by branch and/or show results from all branches: 
-  * CLI Client - It should be possible to show results from all branches with `--all` for the cli client.
-  * Github API - There is no easy way to do this. So it would require to fetch all branches and mix the different commits.
-* git clone --depth to have a faster first result and unshallow on the background.
-* Have a background process fetching the latest commits to avoid CLI being stuck on the past.
+- Reuse the workspace created to deal with server restart or use a database.  
+- Filter by branch and/or show results from all branches:  
+  - CLI Client - It should be possible to show results from all branches with `--all` for the cli client.  
+  - Github API - There is no easy way to do this. So it would require to fetch all branches and mix the different commits.  
+- git clone --depth to have a faster first result and unshallow on the background.  
+- Have a background process fetching the latest commits to avoid CLI being stuck on the past.  
