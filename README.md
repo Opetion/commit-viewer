@@ -18,7 +18,9 @@ Notice the commits are following [Conventional Commits](https://www.conventional
 ### Pre-requirements
 This project is built using language features of Java 11 and so you must install a JDK from one of the many providers.
 
-If unsure of which one to choose I suggest [AdoptOpenJDK](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot) which provides prebuilt openjdk binaries for many platforms. 
+If unsure of which one to choose I suggest [AdoptOpenJDK](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot) which provides prebuilt openjdk binaries for many platforms.
+
+It is also required to have a git client installed and available on the system path to be used by the server. 
 
 ### Build/Run
 To create a runnable jar we only need to execute `./gradlew bootJar` that will provide a runnable jar at `/build/libs` that can be ran with `java -jar seagit-<version>.jar`.
