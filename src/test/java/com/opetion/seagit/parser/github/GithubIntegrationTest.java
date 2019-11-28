@@ -5,7 +5,7 @@ import com.opetion.seagit.git.GitRepository;
 import com.opetion.seagit.git.RefCommit;
 import com.opetion.seagit.git.page.PageRequest;
 import com.opetion.seagit.parser.general.ParserResult;
-import com.opetion.seagit.parser.util.FileParser;
+import com.opetion.seagit.parser.util.FileParserUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class GithubIntegrationTest {
 	static void createWireMockStub() throws IOException {
 		wireMockServer.start();
 
-		String responseBody = FileParser.parse("parser/github-sample.json").collect(Collectors.joining());
+		String responseBody = FileParserUtil.parse("parser/github-sample.json").collect(Collectors.joining());
 
 		wireMockServer.stubFor(get(anyUrl()).willReturn(
 				aResponse().withStatus(200).withHeader("Content-Type", "application/json").withBody(responseBody)));

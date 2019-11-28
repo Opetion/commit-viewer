@@ -6,9 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-public class FileParser {
+public class FileParserUtil {
 	public static Stream<String> parse(String path) throws IOException {
-		URL resource = FileParser.class.getClassLoader().getResource(path);
+		URL resource = FileParserUtil.class.getClassLoader().getResource(path);
 		File file = new File(resource.getFile());
 		return Files.readAllLines(Path.of(file.toURI())).stream();
 	}

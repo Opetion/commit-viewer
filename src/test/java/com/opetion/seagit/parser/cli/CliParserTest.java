@@ -2,7 +2,7 @@ package com.opetion.seagit.parser.cli;
 
 import com.opetion.seagit.error.CliException;
 import com.opetion.seagit.git.RefCommit;
-import com.opetion.seagit.parser.util.FileParser;
+import com.opetion.seagit.parser.util.FileParserUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ class CliParserTest {
 
 	@Test
 	void checkParser() throws IOException {
-		Stream<String> textFile = FileParser.parse("parser/gitlog-sample.txt");
+		Stream<String> textFile = FileParserUtil.parse("parser/gitlog-sample.txt");
 		List<RefCommit> commits = cliParser.parse(textFile);
 		assertEquals(12, commits.size());
 		assertEquals(commits.get(0), expectedLastCommit());
